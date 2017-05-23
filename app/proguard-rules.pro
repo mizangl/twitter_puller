@@ -1,25 +1,18 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /Users/martinzangl/Library/Android/sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-keep class com.mz.twitterpuller.** { *; }
 
-# Add any project specific keep options here:
+-keep class android.support.v4.widget.DrawerLayout { *; }
+-keep class android.support.test.espresso.IdlingResource { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Proguard rules that are applied to your test apk/code.
+-ignorewarnings
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes *Annotation*
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-dontnote junit.framework.**
+-dontnote junit.runner.**
+
+-dontwarn android.test.**
+-dontwarn android.support.test.**
+-dontwarn org.junit.**
+
+

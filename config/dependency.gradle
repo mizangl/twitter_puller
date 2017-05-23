@@ -1,0 +1,43 @@
+allprojects {
+  repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+    maven { url 'https://maven.fabric.io/public' }
+  }
+}
+
+ext {
+  androidBuildToolsVersion = "25.0.2"
+  androidMinSdkVersion = 19
+  androidTargetSdkVersion = 25
+  androidCompileSdkVersion = 25
+
+
+  supportLibraryVersion = '25.3.1'
+  daggerVersion = '2.7'
+  javaxAnnotationVersion = '1.0'
+  rxJavaVersion = '2.0.2'
+  rxAndroidVersion = '2.0.1'
+  twitterCoreVersion = '2.3.1@aar'
+  fabricVersion = '2.6.8@aar'
+  timberVersion = '4.5.1'
+
+  espressoVersion = '2.2.2'
+  junitVersion = '4.12'
+
+
+  appDependencies = [daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
+                     dagger            : "com.google.dagger:dagger:${daggerVersion}",
+                     javaxAnnotation   : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+                     androidAnnotations: "com.android.support:support-annotations:${supportLibraryVersion}",
+                     supportV7         : "com.android.support:appcompat-v7:${supportLibraryVersion}",
+                     rxJava            : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+                     rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
+                     fabric            : "com.crashlytics.sdk.android:crashlytics:${fabricVersion}",
+                     twitterCore       : "com.twitter.sdk.android:twitter-core:${twitterCoreVersion}",
+                     timber            : "com.jakewharton.timber:timber:${timberVersion}",]
+
+  testDependencies =
+      [espresso: "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+       junit   : "junit:junit:${junitVersion}"]
+}

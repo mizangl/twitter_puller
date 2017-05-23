@@ -1,29 +1,75 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'io.fabric'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  def settings = rootProject.extensions.getByName("ext")
+
+  compileSdkVersion settings.getAt("androidCompileSdkVersion")
+  buildToolsVersion settings.getAt("androidBuildToolsVersion")
+
   defaultConfig {
-    applicationId "com.mz.twitterpuller"
-    minSdkVersion 19
-    targetSdkVersion 25
-    versionCode 1
-    versionName "1.0"
+
+    minSdkVersion settings.getAt("androidMinSdkVersion")
+    targetSdkVersion settings.getAt("androidTargetSdkVersion")
+
+    applicationId settings.getAt("androidApplicationId")
+    versionCode settings.getAt("androidVersionCode")
+    versionName settings.getAt("androidVersionName")
+
+    testInstrumentationRunner settings.getAt("testInstrumentationRunner")
+    testApplicationId settings.getAt("testApplicationId")
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+
   buildTypes {
-    release {
-      minifyEnabled false
+
+    debug {
+      minifyEnabled true
+      useProguard false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+    }
+
+    release {
+      release {
+        minifyEnabled true
+        useProguard true
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+      }
     }
   }
 }
 
 dependencies {
+
+  def appDependencies = rootProject.ext.appDependencies
+  def testDependencies = rootProject.ext.testDependencies
+
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+
+  compile appDependencies.dagger
+  apt appDependencies.daggerCompiler
+
+  provided appDependencies.javaxAnnotation
+  compile appDependencies.androidAnnotations
+
+  compile appDependencies.supportV7
+  compile appDependencies.rxJava
+  compile appDependencies.rxAndroid
+
+  compile(appDependencies.twitterCore) {
+    transitive = true;
+  }
+  compile(appDependencies.fabric) {
+    transitive = true;
+  }
+
+  compile appDependencies.timber
+  
+  androidTestCompile(testDependencies.espresso, {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile 'com.android.support:appcompat-v7:25.3.1'
   testCompile 'junit:junit:4.12'
 }
