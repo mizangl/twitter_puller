@@ -40,6 +40,12 @@ android {
       }
     }
   }
+
+  lintOptions {
+    textReport true
+    textOutput 'stdout'
+    ignore 'InvalidPackage'
+  }
 }
 
 dependencies {

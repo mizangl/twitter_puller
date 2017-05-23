@@ -1,10 +1,10 @@
 package com.mz.twitterpuller.interactor;
 
 import com.mz.twitterpuller.util.executor.PostExecutionThread;
+import com.mz.twitterpuller.util.executor.ThreadExecutor;
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.TestScheduler;
-import java.util.concurrent.Executor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.given;
   private InteractorTestClass interactor;
   private TestDisposableObserver<Object> testObserver;
 
-  @Mock private Executor mockExecutor;
+  @Mock private ThreadExecutor mockExecutor;
   @Mock private PostExecutionThread mockPostExecutionThread;
 
   @Before public void setUp() {
@@ -51,7 +51,7 @@ import static org.mockito.BDDMockito.given;
 
   private static class InteractorTestClass extends Interactor<Object, Args> {
 
-    public InteractorTestClass(Executor executor, PostExecutionThread postExecutionThread) {
+    public InteractorTestClass(ThreadExecutor executor, PostExecutionThread postExecutionThread) {
       super(executor, postExecutionThread);
     }
 

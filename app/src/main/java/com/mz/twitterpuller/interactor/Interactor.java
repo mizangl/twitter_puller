@@ -1,6 +1,7 @@
 package com.mz.twitterpuller.interactor;
 
 import com.mz.twitterpuller.util.executor.PostExecutionThread;
+import com.mz.twitterpuller.util.executor.ThreadExecutor;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -19,7 +20,7 @@ public abstract class Interactor<T, P> {
   private final PostExecutionThread postExecutionThread;
   private final CompositeDisposable disposables;
 
-  public Interactor(Executor executor, PostExecutionThread postExecutionThread) {
+  public Interactor(ThreadExecutor executor, PostExecutionThread postExecutionThread) {
     this.executor = executor;
     this.postExecutionThread = postExecutionThread;
     disposables = new CompositeDisposable();
