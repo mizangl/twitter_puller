@@ -6,9 +6,11 @@ import com.mz.twitterpuller.interactor.DefaultObserver;
 import com.mz.twitterpuller.interactor.GetTweets;
 import com.mz.twitterpuller.interactor.Interactor;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
+import timber.log.Timber;
 
 import static com.mz.twitterpuller.tweet.TweetsContract.View.EXTRA_MAX;
 import static com.mz.twitterpuller.tweet.TweetsContract.View.EXTRA_PROGRESS;
@@ -17,7 +19,7 @@ import static com.mz.twitterpuller.tweet.TweetsContract.View.EXTRA_SINCE;
 final class TweetsPresenter implements TweetsContract.Presenter {
 
   static final int COUNT = 50;
-  private final Interactor<TweetModel, Map<String, Number>> getTweetsInteractor;
+  private final Interactor<List<TweetModel>, Map<String, Number>> getTweetsInteractor;
   private final TweetsContract.View tweetsView;
   private long since = -1;
   private long max = -1;
@@ -27,6 +29,8 @@ final class TweetsPresenter implements TweetsContract.Presenter {
       TweetsContract.View tweetsView) {
     this.getTweetsInteractor = getTweetsInteractor;
     this.tweetsView = tweetsView;
+
+    Timber.tag(TweetsPresenter.class.getSimpleName());
   }
 
   @Inject void setupView() {
@@ -71,27 +75,35 @@ final class TweetsPresenter implements TweetsContract.Presenter {
     isInProgress = savedInstanceState.getBoolean(EXTRA_PROGRESS);
   }
 
-  @Override public void updateSinceAndMax(long first, long last) {
-    since = first;
-    max = last;
+  private void updateSinceAndMax(List<TweetModel> models) {
+    if (models == null || models.isEmpty()) return;
+    since = models.get(0).id;
+    max = models.get(models.size() - 1).id;
   }
 
-  private class TweetsObserver extends DefaultObserver<TweetModel> {
-    @Override public void onNext(TweetModel value) {
+  private class TweetsObserver extends DefaultObserver<List<TweetModel>> {
+    @Override public void onNext(List<TweetModel> values) {
       if (isInProgress) {
         isInProgress = false;
         tweetsView.removeProgress();
       }
-      tweetsView.bind(value);
+
+      updateSinceAndMax(values);
+      tweetsView.bind(values);
     }
 
     @Override public void onError(Throwable e) {
+      if (isInProgress) {
+        isInProgress = false;
+        tweetsView.removeProgress();
+      }
       tweetsView.setProgressIndicator(false);
+
+      Timber.e("onError: ", e);
     }
 
     @Override public void onComplete() {
       tweetsView.setProgressIndicator(false);
-      tweetsView.updateSinceAndMax();
     }
 
     @Override protected void onStart() {

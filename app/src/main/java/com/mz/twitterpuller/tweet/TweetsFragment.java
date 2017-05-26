@@ -13,6 +13,7 @@ import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.tweet.TweetsContract.View;
 import com.mz.twitterpuller.util.EndlessScroll;
+import java.util.List;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -76,11 +77,8 @@ public class TweetsFragment extends Fragment implements View {
     adapter.addTweet(value);
   }
 
-  @Override public void updateSinceAndMax() {
-    long first = adapter.firstId();
-    long last = adapter.lastId();
-
-    presenter.updateSinceAndMax(first, last);
+  @Override public void bind(List<TweetModel> values) {
+    adapter.addTweets(values);
   }
 
   @Override public void addProgress() {
@@ -92,7 +90,7 @@ public class TweetsFragment extends Fragment implements View {
   }
 
   @NonNull private EndlessScroll createEndlessScroll(LinearLayoutManager manager) {
-    return new EndlessScroll(TweetsPresenter.COUNT, manager) {
+    return new EndlessScroll(manager) {
       @Override public void onScrolledToEnd(int firstItemPosition) {
         presenter.pullOlder();
       }

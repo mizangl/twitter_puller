@@ -5,11 +5,9 @@ import android.support.v7.widget.RecyclerView;
 
 public abstract class EndlessScroll extends RecyclerView.OnScrollListener {
 
-  private final int maxItemToLoad;
   private final LinearLayoutManager manager;
 
-  protected EndlessScroll(int maxItemToLoad, LinearLayoutManager manager) {
-    this.maxItemToLoad = maxItemToLoad - 1;
+  protected EndlessScroll(LinearLayoutManager manager) {
     this.manager = manager;
   }
 
@@ -34,7 +32,7 @@ public abstract class EndlessScroll extends RecyclerView.OnScrollListener {
 
     final boolean latest = childCount + firstVisibleItemPosition >= itemCount;
 
-    return latest && itemCount >= maxItemToLoad;
+    return latest;
   }
 
   public abstract void onScrolledToEnd(int firstItemPosition);

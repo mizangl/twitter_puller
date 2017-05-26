@@ -5,9 +5,10 @@ import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.util.executor.PostExecutionThread;
 import com.mz.twitterpuller.util.executor.ThreadExecutor;
 import io.reactivex.Observable;
+import java.util.List;
 import java.util.Map;
 
-public class GetTweets extends Interactor<TweetModel, Map<String, Number>> {
+public class GetTweets extends Interactor<List<TweetModel>, Map<String, Number>> {
 
   public static final String PARAM_COUNT = "count";
   public static final String PARAM_SINCE = "since";
@@ -20,7 +21,7 @@ public class GetTweets extends Interactor<TweetModel, Map<String, Number>> {
     this.repository = repository;
   }
 
-  @Override Observable<TweetModel> buildInteractor(Map<String, Number> params) {
+  @Override Observable<List<TweetModel>> buildInteractor(Map<String, Number> params) {
 
     final Integer count = (Integer) params.get(PARAM_COUNT);
     final Long since = (Long) params.get(PARAM_SINCE);

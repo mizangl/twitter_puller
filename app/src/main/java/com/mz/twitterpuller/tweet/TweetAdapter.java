@@ -44,23 +44,21 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
     return data.get(position).getType();
   }
 
-  long firstId() {
-    if (data.isEmpty()) return -1;
-    return ((TweetItem) data.get(0)).getModel().id;
-  }
-
-  long lastId() {
-    if (data.isEmpty()) return -1;
-    return ((TweetItem) data.get(0)).getModel().id;
-  }
-
   @Override public int getItemCount() {
     return data.size();
   }
 
   void addTweet(@NonNull TweetModel value) {
     data.add(new TweetItem(value));
-    notifyItemInserted(data.size() - 1);
+  }
+
+  void addTweets(@NonNull List<TweetModel> values) {
+    if (values != null && !values.isEmpty()) {
+      for (TweetModel model : values) {
+        data.add(new TweetItem(model));
+        notifyItemInserted(data.size() - 1);
+      }
+    }
   }
 
   void showProgress() {

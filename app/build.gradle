@@ -84,6 +84,8 @@ dependencies {
   })
 
   androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
+  androidTestCompile appDependencies.rxJava
+  androidTestCompile appDependencies.rxAndroid
 
   // Dependencies for local unit tests
   testCompile testDependencies.junit

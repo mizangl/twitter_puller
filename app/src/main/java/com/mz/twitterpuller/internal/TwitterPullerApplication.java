@@ -13,8 +13,8 @@ import timber.log.Timber;
 
 public class TwitterPullerApplication extends Application {
 
-  private static final String TWITTER_KEY = "7wkmRqwFrGEScl9kDUYcYCwPI";
-  private static final String TWITTER_SECRET = "LGWlg9eY2X9s3OWX1x0E9LTbEavkN4RBIIuox2acoNWYUvhALC";
+  private static final String TWITTER_KEY = "uW32L5DGLrrulyosZF8g1O7cC";
+  private static final String TWITTER_SECRET = "4sigDm4Osrl4pOPrRcaXXVCKQyxrUl9KweyD4Tfnt3CSsa8RlP";
 
   private ApplicationComponent component;
 

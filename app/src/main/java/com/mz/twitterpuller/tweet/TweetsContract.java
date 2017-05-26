@@ -4,6 +4,7 @@ import android.os.Bundle;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.util.BasePresenter;
 import com.mz.twitterpuller.util.BaseView;
+import java.util.List;
 import java.util.Map;
 
 public interface TweetsContract {
@@ -18,12 +19,11 @@ public interface TweetsContract {
 
     void bind(TweetModel value);
 
-    void updateSinceAndMax();
-
     void removeProgress();
 
     void addProgress();
 
+    void bind(List<TweetModel> values);
   }
 
   interface Presenter extends BasePresenter{
@@ -31,8 +31,6 @@ public interface TweetsContract {
     void saveInstance(Bundle bundle);
 
     void restoreInstance(Bundle savedInstanceState);
-
-    void updateSinceAndMax(long first, long last);
 
     void pullNews();
 

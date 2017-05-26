@@ -4,6 +4,7 @@ import android.app.Activity;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.data.source.DataSource;
 import io.reactivex.Observable;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -19,7 +20,12 @@ import javax.inject.Singleton;
     return remoteDataSource.doLogin(activity);
   }
 
-  @Override public Observable<TweetModel> pullTweets(final Integer count, final Long since, final Long max) {
+  @Override public Observable<List<TweetModel>> pullTweets(final Integer count, final Long since,
+      final Long max) {
     return remoteDataSource.pullTweets(count, since, max);
+  }
+
+  @Override public void savedLocally(List<TweetModel> models) {
+
   }
 }

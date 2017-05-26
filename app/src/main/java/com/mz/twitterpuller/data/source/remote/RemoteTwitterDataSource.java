@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.mz.twitterpuller.data.exception.NoInternetConnectionException;
 import com.mz.twitterpuller.data.exception.RateLimitExceededException;
+import com.mz.twitterpuller.data.exception.UnAuthorizedException;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.data.model.mapper.TweetModelMapper;
 import com.mz.twitterpuller.data.source.DataSource;
@@ -63,11 +64,13 @@ import retrofit2.Response;
     });
   }
 
-  @Override
-  public Observable<TweetModel> pullTweets(final Integer count, final Long since, final Long max) {
-    return Observable.create(new ObservableOnSubscribe<TweetModel>() {
-      @Override public void subscribe(ObservableEmitter<TweetModel> emitter) throws Exception {
+  @Override public Observable<List<TweetModel>> pullTweets(final Integer count, final Long since,
+      final Long max) {
+    return Observable.create(new ObservableOnSubscribe<List<TweetModel>>() {
+      @Override public void subscribe(ObservableEmitter<List<TweetModel>> emitter)
+          throws Exception {
         if (isThereInternetConnection()) {
+
           Call<List<Tweet>> call = TwitterCore.getInstance()
               .getApiClient()
               .getStatusesService()
@@ -77,14 +80,13 @@ import retrofit2.Response;
           final Response<List<Tweet>> response = call.execute();
 
           if (response.isSuccessful()) {
-            List<Tweet> tweetList = response.body();
-
-            for (Tweet tweet : tweetList) {
-              TweetModel model = tweetModelMapper.transform(tweet);
-              emitter.onNext(model);
-            }
+            List<TweetModel> models = tweetModelMapper.transform(response.body());
+            emitter.onNext(models);
             emitter.onComplete();
           } else {
+            if (response.code() == 401) {
+              emitter.onError(new UnAuthorizedException());
+            }
             if (response.code() == 429) {
               emitter.onError(new RateLimitExceededException());
             } else {
@@ -96,6 +98,10 @@ import retrofit2.Response;
         }
       }
     });
+  }
+
+  @Override public void savedLocally(List<TweetModel> models) {
+    throw new UnsupportedOperationException();
   }
 
   private boolean isThereInternetConnection() {
