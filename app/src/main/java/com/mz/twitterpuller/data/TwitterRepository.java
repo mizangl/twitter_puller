@@ -39,7 +39,7 @@ import javax.inject.Singleton;
           }
         });
 
-    return Observable.concat(localLoginObservable, remoteLoginObservable);
+    return Observable.concat(localLoginObservable, remoteLoginObservable).firstElement().toObservable();
   }
 
   @Override public Observable<List<TweetModel>> pullTweets(final Integer count, final Long since,
@@ -59,7 +59,7 @@ import javax.inject.Singleton;
           }
         });
 
-    return Observable.concat(localObservable, remoteObservable);
+    return Observable.concat(localObservable, remoteObservable).firstElement().toObservable();
   }
 
   @Override public void savedLocally(List<TweetModel> models) {

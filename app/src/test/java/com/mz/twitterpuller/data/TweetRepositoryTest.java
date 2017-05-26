@@ -37,7 +37,8 @@ import static org.mockito.Mockito.when;
         });
     Observable<List<TweetModel>> remote = Observable.just(remoteTweets);
 
-    Observable<List<TweetModel>> listObservable = Observable.concat(local, remote);
+    Observable<List<TweetModel>> listObservable =
+        Observable.concat(local, remote).firstElement().toObservable();
 
     List<TweetModel> models = listObservable.test().values().get(0);
 
@@ -56,7 +57,7 @@ import static org.mockito.Mockito.when;
         });
     Observable<List<TweetModel>> remote = Observable.just(remoteTweets);
 
-    Observable<List<TweetModel>> listObservable = Observable.concat(local, remote);
+    Observable<List<TweetModel>> listObservable = Observable.concat(local, remote).firstElement().toObservable();
 
     List<TweetModel> models = listObservable.test().values().get(0);
 
