@@ -16,7 +16,6 @@ import io.reactivex.ObservableOnSubscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.provider.BaseColumns._ID;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_CONTENT;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_CREATED_AT;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_ID;
@@ -56,7 +55,6 @@ public class LocalTwitterDataSource implements DataSource {
 
         if (cursor == null || cursor.getCount() == 0) {
           if (cursor != null) cursor.close();
-          emitter.onNext(models);
           emitter.onComplete();
         } else {
           while (cursor.moveToNext()) {
