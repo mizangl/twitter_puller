@@ -24,7 +24,17 @@ import javax.inject.Singleton;
   }
 
   @Override public Observable<Boolean> doLogin(final Activity activity) {
-    return remoteDataSource.doLogin(activity);
+
+    Observable<Boolean> localLoginObservable =
+        localDataSource.doLogin(activity).filter(new Predicate<Boolean>() {
+          @Override public boolean test(Boolean aBoolean) throws Exception {
+            return activity == null;
+          }
+        });
+
+    Observable<Boolean> remoteLoginObservable = remoteDataSource.doLogin(activity);
+
+    return Observable.concat(localLoginObservable, remoteLoginObservable);
   }
 
   @Override public Observable<List<TweetModel>> pullTweets(final Integer count, final Long since,

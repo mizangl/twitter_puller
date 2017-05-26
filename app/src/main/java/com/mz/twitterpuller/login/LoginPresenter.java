@@ -25,13 +25,7 @@ final class LoginPresenter implements LoginContract.Presenter {
 
   @Override public void start() {
     loginView.setProgressIndicator(true);
-    boolean isActive = TwitterCore.getInstance().getSessionManager().getActiveSession() != null;
-    if (isActive) {
-      loginView.navigateToMain();
-      return;
-    }
-
-    loginView.setProgressIndicator(false);
+    getSessionInteractor.execute(new SessionObserver(), null);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
