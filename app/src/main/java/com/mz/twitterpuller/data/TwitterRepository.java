@@ -32,7 +32,12 @@ import javax.inject.Singleton;
           }
         });
 
-    Observable<Boolean> remoteLoginObservable = remoteDataSource.doLogin(activity);
+    Observable<Boolean> remoteLoginObservable = remoteDataSource.doLogin(activity)
+        .filter(new Predicate<Boolean>() {
+          @Override public boolean test(Boolean aBoolean) throws Exception {
+            return activity != null;
+          }
+        });
 
     return Observable.concat(localLoginObservable, remoteLoginObservable);
   }

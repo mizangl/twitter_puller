@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import com.mz.twitterpuller.interactor.DefaultObserver;
 import com.mz.twitterpuller.interactor.Interactor;
-import com.twitter.sdk.android.core.TwitterCore;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -43,7 +42,9 @@ final class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override public void onNext(Boolean value) {
-      if (value) loginView.navigateToMain();
+      if (value) {
+        loginView.navigateToMain();
+      }
     }
 
     @Override public void onError(Throwable e) {
