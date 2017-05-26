@@ -40,6 +40,22 @@ android {
     }
   }
 
+  productFlavors {
+
+    mock {
+      applicationIdSuffix = ".mock"
+    }
+
+    prod {}
+  }
+
+  android.variantFilter { variant ->
+    if (variant.buildType.name == 'release' && variant.getFlavors().
+        get(0).name == 'mock') {
+      variant.setIgnore(true)
+    }
+  }
+
   lintOptions {
     textReport true
     textOutput 'stdout'
