@@ -3,4 +3,9 @@
   <color name="colorPrimary">#3F51B5</color>
   <color name="colorPrimaryDark">#303F9F</color>
   <color name="colorAccent">#FF4081</color>
+
+  <color name="tweet_author_text_color">#999999</color>
+  <color name="tweet_message_text_color">#333333</color>
+  <drawable name="tweet_placeholder_image">#dddddd</drawable>
+
 </resources>
