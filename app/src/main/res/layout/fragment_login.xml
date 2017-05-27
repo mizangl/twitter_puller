@@ -3,7 +3,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:background="@color/tw__blue_default">
 
   <com.twitter.sdk.android.core.identity.TwitterLoginButton
       android:id="@+id/login_tw"
@@ -12,12 +12,13 @@
       android:layout_gravity="center"
       android:visibility="invisible"/>
 
-  <Button
+  <ImageButton
       android:id="@+id/login"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="login"
-      android:layout_gravity="center"/>
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_gravity="center"
+      android:src="@drawable/tw__ic_logo_default"
+      android:background="@drawable/layer_list_btn_background"/>
 
   <ProgressBar
       android:id="@+id/progress"

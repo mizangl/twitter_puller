@@ -11,6 +11,11 @@ public class TweetModel {
 
   public String[] media;
 
+  public String[] getMedia() {
+    if (media == null) return new String[] {};
+    return media;
+  }
+
   @Override public String toString() {
     return "TweetModel{"
         + "id="

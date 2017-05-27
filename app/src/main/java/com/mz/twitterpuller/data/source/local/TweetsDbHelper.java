@@ -114,7 +114,7 @@ public class TweetsDbHelper extends SQLiteOpenHelper {
     SQLiteDatabase database = getReadableDatabase();
 
     final Cursor cursor =
-        database.query(Tables.TWEET_TABLE, PROJECTION, null, null, null, null, COLUMN_ID + " ASC");
+        database.query(Tables.TWEET_TABLE, PROJECTION, null, null, null, null, COLUMN_ID + " DESC");
 
     if (cursor == null || cursor.getCount() == 0) {
       if (cursor != null) cursor.close();

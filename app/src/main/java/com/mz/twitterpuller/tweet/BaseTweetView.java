@@ -2,9 +2,9 @@ package com.mz.twitterpuller.tweet;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,29 +13,28 @@ import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.internal.GlideApp;
 
-public class TweetView extends CardView {
+public abstract class BaseTweetView extends CardView {
 
   private final TextView usernameView;
   private final TextView contentView;
   private final ImageView profileView;
-
-  private final ImageView mediaView;
   private Target<Bitmap> bitmapTarget;
 
-  public TweetView(Context context, AttributeSet attrs) {
+  public BaseTweetView(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public TweetView(Context context, AttributeSet attrs, int defStyleAttr) {
+  public BaseTweetView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
-    LayoutInflater.from(context).inflate(R.layout.view_tweet, this, true);
+    inflate(context);
 
     usernameView = (TextView) findViewById(R.id.username);
     contentView = (TextView) findViewById(R.id.content);
     profileView = (ImageView) findViewById(R.id.profile);
-    mediaView = (ImageView) findViewById(R.id.media);
   }
+
+  protected abstract void inflate(@NonNull Context context);
 
   @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -57,15 +56,14 @@ public class TweetView extends CardView {
         heightUsed);
     heightUsed += calculateMeasuredHeightWithMargins(contentView);
 
-    if (mediaView.getVisibility() != GONE) {
-      measureChildWithMargins(mediaView, widthMeasureSpec, widthUsed, heightMeasureSpec,
-          heightUsed);
-      heightUsed += calculateMeasuredHeightWithMargins(mediaView);
-    }
+    heightUsed += measureDecorate(widthMeasureSpec, widthUsed, heightMeasureSpec, heightUsed);
 
     int heightSize = heightUsed + getPaddingTop() + getPaddingBottom();
     setMeasuredDimension(widthSize, heightSize);
   }
+
+  protected abstract int measureDecorate(int widthMeasureSpec, int widthUsed,
+      int heightMeasureSpec, int heightUsed);
 
   @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
     final int paddingStart = getPaddingStart();
@@ -88,10 +86,11 @@ public class TweetView extends CardView {
 
     currentTop += calculateHeightWithMargins(contentView);
 
-    if (mediaView.getVisibility() != GONE) {
-      layoutView(mediaView, contentStart, currentTop, contentWidth, mediaView.getMeasuredHeight());
-    }
+    layoutDecorated(paddingStart, currentTop, contentWidth, contentStart);
   }
+
+  protected abstract void layoutDecorated(int paddingStart, int currentTop, int contentWidth,
+      int contentStart);
 
   @Override protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
@@ -101,14 +100,16 @@ public class TweetView extends CardView {
   }
 
   void bind(TweetModel model) {
-    setupMedia(model);
-
     usernameView.setText(model.username);
     contentView.setText(model.content);
     bitmapTarget = GlideApp.with(getContext()).asBitmap().load(model.profile).into(profileView);
+
+    bindDecorated(model);
   }
 
-  private void layoutView(View view, int left, int top, int width, int height) {
+  protected abstract void bindDecorated(@NonNull TweetModel model);
+
+  protected void layoutView(View view, int left, int top, int width, int height) {
     MarginLayoutParams margins = (MarginLayoutParams) view.getLayoutParams();
     final int leftWithMargins = left + margins.leftMargin;
     final int topWithMargins = top + margins.topMargin;
@@ -116,32 +117,22 @@ public class TweetView extends CardView {
     view.layout(leftWithMargins, topWithMargins, leftWithMargins + width, topWithMargins + height);
   }
 
-  private void setupMedia(TweetModel model) {
-    if (model.media == null || model.media.length == 0) {
-      mediaView.setVisibility(GONE);
-      return;
-    }
-    mediaView.setVisibility(VISIBLE);
-
-    GlideApp.with(getContext()).asBitmap().load(model.media[0]).into(mediaView);
-  }
-
-  private int calculateWidthWithMargins(View child) {
+  protected int calculateWidthWithMargins(View child) {
     final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
     return child.getWidth() + lp.leftMargin + lp.rightMargin;
   }
 
-  private int calculateHeightWithMargins(View child) {
+  protected int calculateHeightWithMargins(View child) {
     final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
     return child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
   }
 
-  private int calculateMeasuredWidthWithMargins(View child) {
+  protected int calculateMeasuredWidthWithMargins(View child) {
     final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
     return child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
   }
 
-  private int calculateMeasuredHeightWithMargins(View child) {
+  protected int calculateMeasuredHeightWithMargins(View child) {
     final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
     return child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
   }

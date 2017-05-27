@@ -9,8 +9,13 @@ import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.data.model.TweetModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import static com.mz.twitterpuller.tweet.TweetAdapterItem.PROGRESS;
+import static com.mz.twitterpuller.tweet.TweetAdapterItem.TWEET_FOUR_IMAGE;
+import static com.mz.twitterpuller.tweet.TweetAdapterItem.TWEET_ONE_IMAGE;
+import static com.mz.twitterpuller.tweet.TweetAdapterItem.TWEET_THREE_IMAGE;
+import static com.mz.twitterpuller.tweet.TweetAdapterItem.TWEET_TWO_IMAGE;
 
 class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -28,8 +33,28 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
       return new ProgressViewHolder(
           LayoutInflater.from(context).inflate(R.layout.layout_item_progress, parent, false));
     } else {
-      return new TweetViewHolder(
-          LayoutInflater.from(context).inflate(R.layout.layout_tweet, parent, false));
+      switch (viewType) {
+        case TweetAdapterItem.TWEET_BASIC:
+          return new TweetViewHolder(
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_basic, parent, false));
+        case TWEET_ONE_IMAGE:
+          return new TweetViewHolder(
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_one_image, parent, false));
+        case TWEET_TWO_IMAGE:
+          return new TweetViewHolder(
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_two_image, parent, false));
+
+        case TWEET_THREE_IMAGE:
+          return new TweetViewHolder(
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_three_image, parent, false));
+
+        case TWEET_FOUR_IMAGE:
+          return new TweetViewHolder(
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_four_image, parent, false));
+
+        default:
+          throw new UnsupportedOperationException();
+      }
     }
   }
 
@@ -50,7 +75,7 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
   }
 
   void addTweet(@NonNull TweetModel value) {
-    data.add(new TweetItem(value));
+    data.add(new TweetItem(value, value.getMedia().length));
   }
 
   void showFiltered(@NonNull List<TweetModel> filtered) {
@@ -72,8 +97,20 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
   void addTweets(@NonNull List<TweetModel> values) {
     if (!values.isEmpty()) {
       for (TweetModel model : values) {
-        data.add(new TweetItem(model));
+        data.add(new TweetItem(model, model.getMedia().length));
         notifyItemInserted(data.size() - 1);
+      }
+    }
+  }
+
+  void addTweetsTop(@NonNull List<TweetModel> values) {
+    if (!values.isEmpty()) {
+      ListIterator<TweetModel> iterator = values.listIterator(values.size());
+      TweetModel model;
+      while (iterator.hasPrevious()) {
+        model = iterator.previous();
+        data.add(0, new TweetItem(model, model.getMedia().length));
+        notifyItemInserted(0);
       }
     }
   }

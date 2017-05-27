@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <include layout="@layout/view_tweet_with_two_image"/>
+
+
+  <ImageView
+      android:id="@+id/media3"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/tweet_media_height"
+      android:scaleType="centerCrop"
+      tools:src="@color/primary_dark"
+      android:paddingStart="5dp"/>
+
+</merge>

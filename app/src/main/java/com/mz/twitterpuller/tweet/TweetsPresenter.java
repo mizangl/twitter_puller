@@ -54,12 +54,12 @@ final class TweetsPresenter implements TweetsContract.Presenter {
     params.put(GetTweets.PARAM_COUNT, COUNT);
     params.put(GetTweets.PARAM_SINCE, since);
 
-    getTweetsInteractor.execute(new TweetsObserver(), params);
+    getTweetsInteractor.execute(new PullTweetsObserver(), params);
   }
 
   @Override public void pullOlder() {
     if (isInProgress) return;
-    if(isShowingFiltered) return;
+    if (isShowingFiltered) return;
 
     isInProgress = true;
     final Map<String, Number> params = new HashMap<>();
@@ -83,7 +83,7 @@ final class TweetsPresenter implements TweetsContract.Presenter {
   }
 
   @Override public void search(CharSequence newText) {
-    if (TextUtils.isEmpty(newText)){
+    if (TextUtils.isEmpty(newText)) {
       tweetsView.removeFiltered();
       isShowingFiltered = false;
       return;
@@ -129,6 +129,28 @@ final class TweetsPresenter implements TweetsContract.Presenter {
       } else {
         tweetsView.setProgressIndicator(true);
       }
+    }
+  }
+
+  private class PullTweetsObserver extends DefaultObserver<List<TweetModel>> {
+    @Override public void onNext(List<TweetModel> values) {
+      updateSinceAndMax(values);
+      tweetsView.bindTop(values);
+    }
+
+    @Override public void onError(Throwable e) {
+      tweetsView.setProgressIndicator(false);
+
+      Timber.e("onError: ", e);
+    }
+
+    @Override public void onComplete() {
+      tweetsView.setProgressIndicator(false);
+    }
+
+    @Override protected void onStart() {
+
+      tweetsView.setProgressIndicator(true);
     }
   }
 

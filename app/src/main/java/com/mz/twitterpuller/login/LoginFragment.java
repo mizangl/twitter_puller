@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.tweet.TweetsActivity;
@@ -18,7 +19,7 @@ import timber.log.Timber;
 public class LoginFragment extends Fragment implements LoginContract.View {
 
   private TwitterLoginButton twitterLoginButton;
-  private Button loginButton;
+  private ImageButton loginButton;
   private ProgressBar progressBar;
   private LoginContract.Presenter presenter;
 
@@ -38,7 +39,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    loginButton = (Button) view.findViewById(R.id.login);
+    loginButton = (ImageButton) view.findViewById(R.id.login);
     twitterLoginButton = (TwitterLoginButton) view.findViewById(R.id.login_tw);
     progressBar = (ProgressBar) view.findViewById(R.id.progress);
 

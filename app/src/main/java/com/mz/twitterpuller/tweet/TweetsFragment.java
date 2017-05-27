@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -11,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.tweet.TweetsContract.View;
@@ -19,15 +20,13 @@ import com.mz.twitterpuller.util.EndlessScroll;
 import java.util.List;
 import timber.log.Timber;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-
-public class TweetsFragment extends Fragment implements View, SearchView.OnQueryTextListener {
+public class TweetsFragment extends Fragment
+    implements View, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
   private TweetsContract.Presenter presenter;
 
-  private ProgressBar progressBar;
   private RecyclerView recyclerView;
+  private SwipeRefreshLayout swipeRefreshLayout;
 
   private TweetAdapter adapter;
 
@@ -51,7 +50,7 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
 
     recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress);
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
   }
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
   }
 
   @Override public void setProgressIndicator(boolean status) {
-    progressBar.setVisibility(status ? VISIBLE : INVISIBLE);
+    swipeRefreshLayout.setRefreshing(status);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -114,7 +113,6 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
     adapter.removeProgress();
   }
 
-
   @Override public boolean onQueryTextSubmit(String query) {
     Timber.d("onQueryTextSubmit %s", query);
     return false;
@@ -126,6 +124,14 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
     return false;
   }
 
+  @Override public void onRefresh() {
+    presenter.pullNews();
+  }
+
+  @Override public void bindTop(List<TweetModel> values) {
+    adapter.addTweetsTop(values);
+  }
+
   @NonNull private EndlessScroll createEndlessScroll(LinearLayoutManager manager) {
     return new EndlessScroll(manager) {
       @Override public void onScrolledToEnd(int firstItemPosition) {
@@ -135,11 +141,16 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
   }
 
   private void setupRecycleView() {
+    swipeRefreshLayout.setColorSchemeColors(
+        ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null),
+        ResourcesCompat.getColor(getResources(), R.color.colorPrimaryDark, null),
+        ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
+
     adapter = new TweetAdapter(getActivity());
     LinearLayoutManager manager = new LinearLayoutManager(getActivity());
     recyclerView.setLayoutManager(manager);
     recyclerView.setAdapter(adapter);
     recyclerView.addOnScrollListener(createEndlessScroll(manager));
+    swipeRefreshLayout.setOnRefreshListener(this);
   }
-
 }
