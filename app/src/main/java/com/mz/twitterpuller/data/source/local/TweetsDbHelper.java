@@ -8,6 +8,7 @@ import static android.provider.BaseColumns._ID;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_CONTENT;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_CREATED_AT;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_ID;
+import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_MEDIA;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_PROFILE;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_USERNAME;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.TABLE_NAME;
@@ -29,6 +30,8 @@ public class TweetsDbHelper extends SQLiteOpenHelper {
       + COLUMN_USERNAME
       + " TEXT, "
       + COLUMN_CONTENT
+      + " TEXT, "
+      + COLUMN_MEDIA
       + " TEXT, "
       + COLUMN_CREATED_AT
       + " TEXT, UNIQUE("

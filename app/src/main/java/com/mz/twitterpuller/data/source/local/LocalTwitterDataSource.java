@@ -1,7 +1,6 @@
 package com.mz.twitterpuller.data.source.local;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,8 +26,10 @@ public class LocalTwitterDataSource implements DataSource {
 
   private final TweetsDbHelper helper;
   private final TweetModelMapper mapper;
-  private final String PROJECTION[] =
-      { COLUMN_ID, COLUMN_PROFILE, COLUMN_USERNAME, COLUMN_CONTENT, COLUMN_CREATED_AT };
+  private final String PROJECTION[] = new String[] {
+      COLUMN_ID, COLUMN_PROFILE, COLUMN_USERNAME, COLUMN_CONTENT, COLUMN_CREATED_AT,
+      TweetEntry.COLUMN_MEDIA
+  };
 
   public LocalTwitterDataSource(Context context, TweetModelMapper mapper) {
     helper = new TweetsDbHelper(context);
@@ -76,17 +77,8 @@ public class LocalTwitterDataSource implements DataSource {
     SQLiteDatabase database = helper.getWritableDatabase();
 
     database.beginTransaction();
-
     try {
-      ContentValues values = new ContentValues();
-      for (TweetModel model : models) {
-        values.put(COLUMN_ID, model.id);
-        values.put(COLUMN_USERNAME, model.username);
-        values.put(COLUMN_CONTENT, model.content);
-        values.put(COLUMN_PROFILE, model.profile);
-        values.put(COLUMN_CREATED_AT, model.createdAt);
-        database.insert(TABLE_NAME, null, values);
-      }
+      mapper.transformAndInsert(models, database);
       database.setTransactionSuccessful();
     } finally {
       database.endTransaction();

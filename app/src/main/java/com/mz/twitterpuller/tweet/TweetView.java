@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.request.target.Target;
@@ -19,6 +20,7 @@ public class TweetView extends CardView {
   private final TextView contentView;
   private final ImageView profileView;
 
+  private final ImageView mediaView;
   private Target<Bitmap> bitmapTarget;
 
   public TweetView(Context context, AttributeSet attrs) {
@@ -33,6 +35,7 @@ public class TweetView extends CardView {
     usernameView = (TextView) findViewById(R.id.username);
     contentView = (TextView) findViewById(R.id.content);
     profileView = (ImageView) findViewById(R.id.profile);
+    mediaView = (ImageView) findViewById(R.id.media);
   }
 
   @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -53,8 +56,13 @@ public class TweetView extends CardView {
 
     measureChildWithMargins(contentView, widthMeasureSpec, widthUsed, heightMeasureSpec,
         heightUsed);
-
     heightUsed += calculateMeasuredHeightWithMargins(contentView);
+
+    if (mediaView.getVisibility() != GONE) {
+      measureChildWithMargins(mediaView, widthMeasureSpec, widthUsed, heightMeasureSpec,
+          heightUsed);
+      heightUsed += calculateMeasuredHeightWithMargins(mediaView);
+    }
 
     int heightSize = heightUsed + getPaddingTop() + getPaddingBottom();
     setMeasuredDimension(widthSize, heightSize);
@@ -78,6 +86,12 @@ public class TweetView extends CardView {
 
     layoutView(contentView, contentStart, currentTop, contentWidth,
         contentView.getMeasuredHeight());
+
+    currentTop += calculateHeightWithMargins(contentView);
+
+    if (mediaView.getVisibility() != GONE) {
+      layoutView(mediaView, contentStart, currentTop, contentWidth, mediaView.getMeasuredHeight());
+    }
   }
 
   @Override protected void onDetachedFromWindow() {
@@ -88,6 +102,8 @@ public class TweetView extends CardView {
   }
 
   void bind(TweetModel model) {
+    setupMedia(model);
+
     usernameView.setText(model.username);
     contentView.setText(model.content);
     bitmapTarget = GlideApp.with(getContext()).asBitmap().load(model.profile).into(profileView);
@@ -99,6 +115,16 @@ public class TweetView extends CardView {
     final int topWithMargins = top + margins.topMargin;
 
     view.layout(leftWithMargins, topWithMargins, leftWithMargins + width, topWithMargins + height);
+  }
+
+  private void setupMedia(TweetModel model) {
+    if (model.media == null || model.media.length == 0) {
+      mediaView.setVisibility(GONE);
+      return;
+    }
+    mediaView.setVisibility(VISIBLE);
+
+    GlideApp.with(getContext()).asBitmap().load(model.media[0]).into(mediaView);
   }
 
   private int calculateWidthWithMargins(View child) {

@@ -7,28 +7,37 @@
 
   <ImageView
       android:id="@+id/profile"
-      android:layout_width="@dimen/tweet_user_image_size"
-      android:layout_height="@dimen/tweet_user_image_size"
-      android:layout_marginEnd="@dimen/tweet_content_margin"
+      android:layout_width="@dimen/tweet_profile_size"
+      android:layout_height="@dimen/tweet_profile_size"
+      android:layout_marginEnd="@dimen/tweet_media_margin"
       android:scaleType="centerCrop"
-      tools:src="@drawable/tw__ic_logo_default"/>
+      tools:src="@drawable/tw__ic_logo_default"
+      />
 
   <TextView
       android:id="@+id/username"
-      android:layout_width="fill_parent"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:maxLines="1"
       android:textColor="@color/tweet_author_text_color"
       android:textSize="@dimen/tweet_username_text_size"
-      android:maxLines="1"
-      tools:text="@string/app_name"/>
+      tools:text="@string/app_name"
+      />
 
   <TextView
       android:id="@+id/content"
-      android:layout_width="fill_parent"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/tweet_content_margin"
+      android:layout_marginBottom="@dimen/tweet_media_margin"
       android:textColor="@color/tweet_message_text_color"
       android:textSize="@dimen/tweet_content_text_size"
-      tools:text="@string/app_name"/>
+      tools:text="@string/app_name"
+      />
+
+  <ImageView
+      android:id="@+id/media"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/tweet_media_height"
+      android:visibility="gone"/>
 
 </merge>

@@ -7,8 +7,9 @@
   <dimen name="tweet_content_text_size">16sp</dimen>
 
   <dimen name="tweet_padding">10dp</dimen>
-  <dimen name="tweet_content_margin">10dp</dimen>
+  <dimen name="tweet_media_margin">5dp</dimen>
 
-  <dimen name="tweet_user_image_size">60dp</dimen>
-  <dimen name="tweet_image_height">130dp</dimen>
+  <dimen name="tweet_profile_size">60dp</dimen>
+  <dimen name="tweet_media_height">130dp</dimen>
+
 </resources>

@@ -10,4 +10,5 @@ public abstract class TweetEntry implements BaseColumns{
   public static final String COLUMN_CONTENT = "content";
   public static final String COLUMN_PROFILE = "profile";
   public static final String COLUMN_CREATED_AT = "created_at";
+  public static final String COLUMN_MEDIA = "media";
 }

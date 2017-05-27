@@ -1,11 +1,15 @@
 package com.mz.twitterpuller.data.model;
 
+import android.support.annotation.VisibleForTesting;
+
 public class TweetModel {
   public long id;
   public String content;
   public String username;
   public String profile;
   public String createdAt;
+
+  public String[] media;
 
   @Override public String toString() {
     return "TweetModel{"
@@ -42,7 +46,7 @@ public class TweetModel {
     return result;
   }
 
-  public static class Builder {
+  @VisibleForTesting public static class Builder {
 
     private final TweetModel model;
 
