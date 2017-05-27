@@ -9,6 +9,7 @@ import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.data.model.TweetModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import static com.mz.twitterpuller.tweet.TweetAdapterItem.PROGRESS;
 import static com.mz.twitterpuller.tweet.TweetAdapterItem.TWEET_FOUR_IMAGE;
@@ -41,15 +42,15 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
               LayoutInflater.from(context).inflate(R.layout.layout_tweet_one_image, parent, false));
         case TWEET_TWO_IMAGE:
           return new TweetViewHolder(
-              LayoutInflater.from(context).inflate(R.layout.layout_tweet_basic, parent, false));
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_two_image, parent, false));
 
         case TWEET_THREE_IMAGE:
           return new TweetViewHolder(
-              LayoutInflater.from(context).inflate(R.layout.layout_tweet_basic, parent, false));
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_three_image, parent, false));
 
         case TWEET_FOUR_IMAGE:
           return new TweetViewHolder(
-              LayoutInflater.from(context).inflate(R.layout.layout_tweet_basic, parent, false));
+              LayoutInflater.from(context).inflate(R.layout.layout_tweet_four_image, parent, false));
 
         default:
           throw new UnsupportedOperationException();
@@ -98,6 +99,18 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
       for (TweetModel model : values) {
         data.add(new TweetItem(model, model.getMedia().length));
         notifyItemInserted(data.size() - 1);
+      }
+    }
+  }
+
+  void addTweetsTop(@NonNull List<TweetModel> values) {
+    if (!values.isEmpty()) {
+      ListIterator<TweetModel> iterator = values.listIterator(values.size());
+      TweetModel model;
+      while (iterator.hasPrevious()) {
+        model = iterator.previous();
+        data.add(0, new TweetItem(model, model.getMedia().length));
+        notifyItemInserted(0);
       }
     }
   }

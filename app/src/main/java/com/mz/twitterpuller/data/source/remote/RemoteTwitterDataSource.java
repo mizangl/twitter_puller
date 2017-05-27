@@ -81,6 +81,10 @@ import retrofit2.Response;
 
           if (response.isSuccessful()) {
             List<TweetModel> models = tweetModelMapper.transform(response.body());
+            if (max != null) {
+              //remove firs, it'll twice // TODO or implement models.contains() on adapter
+              models.remove(0);
+            }
             emitter.onNext(models);
             emitter.onComplete();
           } else {

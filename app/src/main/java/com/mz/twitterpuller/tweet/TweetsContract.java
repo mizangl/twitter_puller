@@ -29,6 +29,8 @@ public interface TweetsContract {
     void bindFiltered(List<TweetModel> values);
 
     void removeFiltered();
+
+    void bindTop(List<TweetModel> values);
   }
 
   interface Presenter extends BasePresenter{

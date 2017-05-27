@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     >
 
-  <include layout="@layout/view_tweet_basic"/>
+  <include layout="@layout/view_tweet_with_one_image"/>
 
   <ImageView
-      android:id="@+id/media"
+      android:id="@+id/media2"
       android:layout_width="match_parent"
       android:layout_height="@dimen/tweet_media_height"
       android:scaleType="centerCrop"
-      tools:src="@color/colorAccent"
-      />
+      tools:src="@color/primary"
+      android:paddingTop="5dp"/>
 </merge>
