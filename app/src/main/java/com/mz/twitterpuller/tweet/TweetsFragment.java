@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,11 +20,8 @@ import com.mz.twitterpuller.util.EndlessScroll;
 import java.util.List;
 import timber.log.Timber;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-
-public class TweetsFragment extends Fragment implements View, SearchView.OnQueryTextListener,
-    SwipeRefreshLayout.OnRefreshListener {
+public class TweetsFragment extends Fragment
+    implements View, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
   private TweetsContract.Presenter presenter;
 
@@ -143,6 +141,11 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
   }
 
   private void setupRecycleView() {
+    swipeRefreshLayout.setColorSchemeColors(
+        ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null),
+        ResourcesCompat.getColor(getResources(), R.color.colorPrimaryDark, null),
+        ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
+
     adapter = new TweetAdapter(getActivity());
     LinearLayoutManager manager = new LinearLayoutManager(getActivity());
     recyclerView.setLayoutManager(manager);
@@ -150,6 +153,4 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
     recyclerView.addOnScrollListener(createEndlessScroll(manager));
     swipeRefreshLayout.setOnRefreshListener(this);
   }
-
-
 }
