@@ -2,34 +2,22 @@ package com.mz.twitterpuller.data.source.local;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.VisibleForTesting;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.data.model.mapper.TweetModelMapper;
 import com.mz.twitterpuller.data.source.DataSource;
+import com.mz.twitterpuller.data.source.local.TweetsDbHelper.Tables;
 import com.twitter.sdk.android.core.TwitterCore;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_CONTENT;
-import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_CREATED_AT;
-import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_ID;
-import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_PROFILE;
-import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_USERNAME;
-import static com.mz.twitterpuller.data.source.local.TweetEntry.TABLE_NAME;
 
 public class LocalTwitterDataSource implements DataSource {
 
   private final TweetsDbHelper helper;
   private final TweetModelMapper mapper;
-  private final String PROJECTION[] = new String[] {
-      COLUMN_ID, COLUMN_PROFILE, COLUMN_USERNAME, COLUMN_CONTENT, COLUMN_CREATED_AT,
-      TweetEntry.COLUMN_MEDIA
-  };
 
   public LocalTwitterDataSource(Context context, TweetModelMapper mapper) {
     helper = new TweetsDbHelper(context);
@@ -47,72 +35,41 @@ public class LocalTwitterDataSource implements DataSource {
     return Observable.create(new ObservableOnSubscribe<List<TweetModel>>() {
       @Override public void subscribe(ObservableEmitter<List<TweetModel>> emitter)
           throws Exception {
+        List<TweetModel> tweets = helper.getTweets(mapper);
 
-        List<TweetModel> models = new ArrayList<>();
+        if (!tweets.isEmpty()) emitter.onNext(tweets);
 
-        SQLiteDatabase database = helper.getReadableDatabase();
-
-        final Cursor cursor = database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
-
-        if (cursor == null || cursor.getCount() == 0) {
-          if (cursor != null) cursor.close();
-          emitter.onComplete();
-        } else {
-          while (cursor.moveToNext()) {
-            TweetModel model = mapper.transform(cursor);
-            models.add(model);
-          }
-          cursor.close();
-          database.close();
-
-          emitter.onNext(models);
-          emitter.onComplete();
-        }
+        emitter.onComplete();
       }
     });
   }
 
   @Override public void savedLocally(final List<TweetModel> models) {
-
-    SQLiteDatabase database = helper.getWritableDatabase();
-
-    database.beginTransaction();
-    try {
-      mapper.transformAndInsert(models, database);
-      database.setTransactionSuccessful();
-    } finally {
-      database.endTransaction();
-    }
-
-    database.close();
+    helper.save(models, mapper);
   }
 
   public void cleanLocal() {
 
     SQLiteDatabase database = helper.getWritableDatabase();
 
-    database.delete(TABLE_NAME, null, null);
+    database.delete(Tables.TWEET_TABLE, null, null);
 
     database.close();
   }
 
-  @VisibleForTesting public List<TweetModel> getTweetsFromDB() {
-    List<TweetModel> models = new ArrayList<>();
-    SQLiteDatabase database = helper.getReadableDatabase();
-
-    final Cursor cursor = database.query(TABLE_NAME, PROJECTION, null, null, null, null, null);
-
-    if (cursor == null || cursor.getCount() == 0) {
-      if (cursor != null) cursor.close();
-    } else {
-      while (cursor.moveToNext()) {
-        TweetModel model = mapper.transform(cursor);
-        models.add(model);
+  @Override public Observable<List<TweetModel>> filterBy(final CharSequence params) {
+    return Observable.create(new ObservableOnSubscribe<List<TweetModel>>() {
+      @Override public void subscribe(ObservableEmitter<List<TweetModel>> emitter)
+          throws Exception {
+        List<TweetModel> search = helper.search(params, mapper);
+        emitter.onNext(search);
+        emitter.onComplete();
       }
-      cursor.close();
-      database.close();
-    }
+    });
+  }
 
+  @VisibleForTesting public List<TweetModel> getTweetsFromDB() {
+    List<TweetModel> models = helper.getTweets(mapper);
     return models;
   }
 }

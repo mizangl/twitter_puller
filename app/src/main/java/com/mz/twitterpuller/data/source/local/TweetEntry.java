@@ -4,7 +4,6 @@ import android.provider.BaseColumns;
 
 public abstract class TweetEntry implements BaseColumns{
 
-  public static final String TABLE_NAME = "tweet";
   public static final String COLUMN_ID = "tweet_id";
   public static final String COLUMN_USERNAME = "username";
   public static final String COLUMN_CONTENT = "content";

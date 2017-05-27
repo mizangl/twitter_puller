@@ -1,6 +1,7 @@
 package com.mz.twitterpuller.tweet;
 
 import com.mz.twitterpuller.data.TwitterRepository;
+import com.mz.twitterpuller.interactor.FilterTweets;
 import com.mz.twitterpuller.interactor.GetTweets;
 import com.mz.twitterpuller.interactor.Interactor;
 import com.mz.twitterpuller.util.executor.PostExecutionThread;
@@ -24,5 +25,10 @@ import javax.inject.Named;
   @Provides @Named("tweets") Interactor provideGetTweetsInteractor(ThreadExecutor threadExecutor,
       PostExecutionThread postExecutionThread, TwitterRepository repository) {
     return new GetTweets(threadExecutor, postExecutionThread, repository);
+  }
+
+  @Provides @Named("filter") Interactor provideGetFilterInteractor(ThreadExecutor threadExecutor,
+      PostExecutionThread postExecutionThread, TwitterRepository repository) {
+    return new FilterTweets(threadExecutor, postExecutionThread, repository);
   }
 }

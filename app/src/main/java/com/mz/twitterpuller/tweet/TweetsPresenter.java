@@ -1,6 +1,7 @@
 package com.mz.twitterpuller.tweet;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.interactor.DefaultObserver;
 import com.mz.twitterpuller.interactor.GetTweets;
@@ -19,15 +20,19 @@ import static com.mz.twitterpuller.tweet.TweetsContract.View.EXTRA_SINCE;
 final class TweetsPresenter implements TweetsContract.Presenter {
 
   static final int COUNT = 50;
+
   private final Interactor<List<TweetModel>, Map<String, Number>> getTweetsInteractor;
+  private final Interactor<List<TweetModel>, CharSequence> getFilterTweetsInteractor;
+
   private final TweetsContract.View tweetsView;
   private long since = -1;
   private long max = -1;
   private boolean isInProgress;
 
   @Inject TweetsPresenter(@Named("tweets") Interactor getTweetsInteractor,
-      TweetsContract.View tweetsView) {
+      @Named("filter") Interactor getFilterTweetsInteractor, TweetsContract.View tweetsView) {
     this.getTweetsInteractor = getTweetsInteractor;
+    this.getFilterTweetsInteractor = getFilterTweetsInteractor;
     this.tweetsView = tweetsView;
 
     Timber.tag(TweetsPresenter.class.getSimpleName());
@@ -75,6 +80,12 @@ final class TweetsPresenter implements TweetsContract.Presenter {
     isInProgress = savedInstanceState.getBoolean(EXTRA_PROGRESS);
   }
 
+  @Override public void search(CharSequence newText) {
+    if (TextUtils.isEmpty(newText)) return;
+
+    getFilterTweetsInteractor.execute(new FilterObserver(), newText);
+  }
+
   private void updateSinceAndMax(List<TweetModel> models) {
     if (models == null || models.isEmpty()) return;
     since = models.get(0).id;
@@ -112,6 +123,23 @@ final class TweetsPresenter implements TweetsContract.Presenter {
       } else {
         tweetsView.setProgressIndicator(true);
       }
+    }
+  }
+
+  private class FilterObserver extends DefaultObserver<List<TweetModel>> {
+    @Override public void onNext(List<TweetModel> values) {
+      tweetsView.bindFiltered(values);
+    }
+
+    @Override public void onError(Throwable e) {
+    }
+
+    @Override public void onComplete() {
+
+    }
+
+    @Override protected void onStart() {
+
     }
   }
 }

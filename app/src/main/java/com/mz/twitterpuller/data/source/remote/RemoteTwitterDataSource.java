@@ -104,6 +104,10 @@ import retrofit2.Response;
     throw new UnsupportedOperationException();
   }
 
+  @Override public Observable<List<TweetModel>> filterBy(CharSequence params) {
+    throw new UnsupportedOperationException();
+  }
+
   private boolean isThereInternetConnection() {
     boolean isConnected;
 

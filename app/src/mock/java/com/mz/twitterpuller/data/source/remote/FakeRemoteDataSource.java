@@ -30,7 +30,8 @@ public class FakeRemoteDataSource implements DataSource {
 
   @Override public Observable<List<TweetModel>> pullTweets(Integer count, Long since, Long max) {
     return Observable.create(new ObservableOnSubscribe<List<TweetModel>>() {
-      @Override public void subscribe(ObservableEmitter<List<TweetModel>> emitter) throws Exception {
+      @Override public void subscribe(ObservableEmitter<List<TweetModel>> emitter)
+          throws Exception {
         List<Tweet> tweetsList = createTweetsList();
         emitter.onNext(mapper.transform(tweetsList));
         emitter.onComplete();
@@ -39,6 +40,10 @@ public class FakeRemoteDataSource implements DataSource {
   }
 
   @Override public void savedLocally(List<TweetModel> models) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override public Observable<List<TweetModel>> filterBy(CharSequence params) {
     throw new UnsupportedOperationException();
   }
 

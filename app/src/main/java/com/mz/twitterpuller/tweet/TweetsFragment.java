@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,11 +17,12 @@ import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.tweet.TweetsContract.View;
 import com.mz.twitterpuller.util.EndlessScroll;
 import java.util.List;
+import timber.log.Timber;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public class TweetsFragment extends Fragment implements View {
+public class TweetsFragment extends Fragment implements View, SearchView.OnQueryTextListener {
 
   private TweetsContract.Presenter presenter;
 
@@ -37,6 +39,7 @@ public class TweetsFragment extends Fragment implements View {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    Timber.tag(TweetsFragment.class.getSimpleName());
   }
 
   @Nullable @Override
@@ -80,12 +83,22 @@ public class TweetsFragment extends Fragment implements View {
     inflater.inflate(R.menu.tweets_menu, menu);
   }
 
+  @Override public void onPrepareOptionsMenu(Menu menu) {
+    SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+    searchView.setOnQueryTextListener(this);
+  }
+
   @Override public void bind(TweetModel value) {
     adapter.addTweet(value);
   }
 
   @Override public void bind(List<TweetModel> values) {
     adapter.addTweets(values);
+  }
+
+  @Override public void bindFiltered(List<TweetModel> values) {
+      Timber.d("Filtered %s", values);
   }
 
   @Override public void addProgress() {
@@ -110,5 +123,15 @@ public class TweetsFragment extends Fragment implements View {
     recyclerView.setLayoutManager(manager);
     recyclerView.setAdapter(adapter);
     recyclerView.addOnScrollListener(createEndlessScroll(manager));
+  }
+
+  @Override public boolean onQueryTextSubmit(String query) {
+    return false;
+  }
+
+  @Override public boolean onQueryTextChange(String newText) {
+    Timber.d("onQueryTextChange %s", newText);
+    presenter.search(newText);
+    return true;
   }
 }

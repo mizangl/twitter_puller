@@ -65,4 +65,8 @@ import javax.inject.Singleton;
   @Override public void savedLocally(List<TweetModel> models) {
     localDataSource.savedLocally(models);
   }
+
+  @Override public Observable<List<TweetModel>> filterBy(CharSequence params) {
+    return localDataSource.filterBy(params);
+  }
 }

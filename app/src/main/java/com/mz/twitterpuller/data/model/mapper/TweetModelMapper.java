@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.mz.twitterpuller.data.model.TweetModel;
+import com.mz.twitterpuller.data.source.local.TweetsDbHelper;
 import com.twitter.sdk.android.core.models.MediaEntity;
 import com.twitter.sdk.android.core.models.Tweet;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_ID;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_MEDIA;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_PROFILE;
 import static com.mz.twitterpuller.data.source.local.TweetEntry.COLUMN_USERNAME;
-import static com.mz.twitterpuller.data.source.local.TweetEntry.TABLE_NAME;
 
 @Singleton public class TweetModelMapper {
 
@@ -50,7 +50,9 @@ import static com.mz.twitterpuller.data.source.local.TweetEntry.TABLE_NAME;
     model.profile = tweet.user.profileImageUrl;
     model.createdAt = tweet.createdAt;
 
-    if (tweet.extendedEtities != null && tweet.extendedEtities.media != null && !tweet.extendedEtities.media.isEmpty()) {
+    if (tweet.extendedEtities != null
+        && tweet.extendedEtities.media != null
+        && !tweet.extendedEtities.media.isEmpty()) {
       List<String> urlsList = new ArrayList<>();
       List<MediaEntity> mediaEntityList = tweet.extendedEtities.media;
 
@@ -90,7 +92,7 @@ import static com.mz.twitterpuller.data.source.local.TweetEntry.TABLE_NAME;
       final String media = gson.toJson(model.media);
       values.put(COLUMN_MEDIA, media);
 
-      database.insert(TABLE_NAME, null, values);
+      database.insert(TweetsDbHelper.Tables.TWEET_TABLE, null, values);
     }
   }
 }

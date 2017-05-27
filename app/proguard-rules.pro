@@ -1,6 +1,6 @@
 -keep class com.mz.twitterpuller.** { *; }
 -keep class com.twitter.sdk.android.** {*;}
-
+-keep class android.support.** { *; }
 -keep class android.support.v4.widget.DrawerLayout { *; }
 -keep class android.support.test.espresso.IdlingResource { *; }
 

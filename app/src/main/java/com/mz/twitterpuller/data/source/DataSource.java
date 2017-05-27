@@ -12,4 +12,6 @@ public interface DataSource {
   Observable<List<TweetModel>> pullTweets(final Integer count, final Long since, final Long max);
 
   void savedLocally(List<TweetModel> models);
+
+  Observable<List<TweetModel>> filterBy(CharSequence params);
 }

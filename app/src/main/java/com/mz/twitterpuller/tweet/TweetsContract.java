@@ -24,6 +24,8 @@ public interface TweetsContract {
     void addProgress();
 
     void bind(List<TweetModel> values);
+
+    void bindFiltered(List<TweetModel> values);
   }
 
   interface Presenter extends BasePresenter{
@@ -35,5 +37,7 @@ public interface TweetsContract {
     void pullNews();
 
     void pullOlder();
+
+    void search(CharSequence newText);
   }
 }
