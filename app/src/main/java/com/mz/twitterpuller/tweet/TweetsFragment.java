@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import com.mz.twitterpuller.R;
@@ -34,6 +36,7 @@ public class TweetsFragment extends Fragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
   }
 
   @Nullable @Override
@@ -71,6 +74,10 @@ public class TweetsFragment extends Fragment implements View {
 
   @Override public void setProgressIndicator(boolean status) {
     progressBar.setVisibility(status ? VISIBLE : INVISIBLE);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.tweets_menu, menu);
   }
 
   @Override public void bind(TweetModel value) {
