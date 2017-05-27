@@ -28,6 +28,7 @@ final class TweetsPresenter implements TweetsContract.Presenter {
   private long since = -1;
   private long max = -1;
   private boolean isInProgress;
+  private boolean isShowingFiltered;
 
   @Inject TweetsPresenter(@Named("tweets") Interactor getTweetsInteractor,
       @Named("filter") Interactor getFilterTweetsInteractor, TweetsContract.View tweetsView) {
@@ -58,6 +59,7 @@ final class TweetsPresenter implements TweetsContract.Presenter {
 
   @Override public void pullOlder() {
     if (isInProgress) return;
+    if(isShowingFiltered) return;
 
     isInProgress = true;
     final Map<String, Number> params = new HashMap<>();
@@ -81,8 +83,12 @@ final class TweetsPresenter implements TweetsContract.Presenter {
   }
 
   @Override public void search(CharSequence newText) {
-    if (TextUtils.isEmpty(newText)) return;
-
+    if (TextUtils.isEmpty(newText)){
+      tweetsView.removeFiltered();
+      isShowingFiltered = false;
+      return;
+    }
+    isShowingFiltered = true;
     getFilterTweetsInteractor.execute(new FilterObserver(), newText);
   }
 

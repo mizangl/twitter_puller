@@ -12,6 +12,7 @@ public interface TweetsContract {
   interface View extends BaseView<Presenter>{
 
     String EXTRA_PROGRESS = "extra:progress";
+    String EXTRA_FILTERED = "extra:filtered";
     String EXTRA_SINCE = "extra:since";
     String EXTRA_MAX = "extra:max";
 
@@ -26,6 +27,8 @@ public interface TweetsContract {
     void bind(List<TweetModel> values);
 
     void bindFiltered(List<TweetModel> values);
+
+    void removeFiltered();
   }
 
   interface Presenter extends BasePresenter{

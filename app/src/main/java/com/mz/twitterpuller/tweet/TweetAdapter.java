@@ -16,6 +16,7 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
 
   private final Context context;
   private List<TweetAdapterItem> data = new ArrayList<>();
+  private List<TweetAdapterItem> cache = new ArrayList<>();
 
   TweetAdapter(Context context) {
     this.context = context;
@@ -52,8 +53,24 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
     data.add(new TweetItem(value));
   }
 
+  void showFiltered(@NonNull List<TweetModel> filtered) {
+    if (cache.isEmpty()) cache.addAll(data);
+
+    removeItems();
+
+    addTweets(filtered);
+  }
+
+  void removeFiltered() {
+    removeItems();
+
+    data.addAll(cache);
+
+    cache.clear();
+  }
+
   void addTweets(@NonNull List<TweetModel> values) {
-    if (values != null && !values.isEmpty()) {
+    if (!values.isEmpty()) {
       for (TweetModel model : values) {
         data.add(new TweetItem(model));
         notifyItemInserted(data.size() - 1);
@@ -70,5 +87,11 @@ class TweetAdapter extends RecyclerView.Adapter<ViewHolder> {
     int index = data.size() - 1;
     data.remove(index);
     notifyItemRemoved(index);
+  }
+
+  private void removeItems() {
+    int latest = data.size() - 1;
+    data.clear();
+    notifyDataSetChanged();
   }
 }

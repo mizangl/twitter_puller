@@ -98,7 +98,12 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
   }
 
   @Override public void bindFiltered(List<TweetModel> values) {
-      Timber.d("Filtered %s", values);
+    Timber.d("Filtered %s", values);
+    adapter.showFiltered(values);
+  }
+
+  @Override public void removeFiltered() {
+    adapter.removeFiltered();
   }
 
   @Override public void addProgress() {
@@ -107,6 +112,18 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
 
   @Override public void removeProgress() {
     adapter.removeProgress();
+  }
+
+
+  @Override public boolean onQueryTextSubmit(String query) {
+    Timber.d("onQueryTextSubmit %s", query);
+    return false;
+  }
+
+  @Override public boolean onQueryTextChange(String newText) {
+    Timber.d("onQueryTextChange %s", newText);
+    presenter.search(newText);
+    return false;
   }
 
   @NonNull private EndlessScroll createEndlessScroll(LinearLayoutManager manager) {
@@ -125,13 +142,4 @@ public class TweetsFragment extends Fragment implements View, SearchView.OnQuery
     recyclerView.addOnScrollListener(createEndlessScroll(manager));
   }
 
-  @Override public boolean onQueryTextSubmit(String query) {
-    return false;
-  }
-
-  @Override public boolean onQueryTextChange(String newText) {
-    Timber.d("onQueryTextChange %s", newText);
-    presenter.search(newText);
-    return true;
-  }
 }
