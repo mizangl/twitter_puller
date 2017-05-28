@@ -1,6 +1,7 @@
 package com.mz.twitterpuller.tweet;
 
 import android.view.View;
+import com.mz.twitterpuller.tweet.view.ViewHolder;
 
 class ProgressViewHolder extends ViewHolder<Void> {
 
@@ -8,7 +9,7 @@ class ProgressViewHolder extends ViewHolder<Void> {
     super(itemView);
   }
 
-  @Override void bind(Void model) {
+  @Override public void bind(Void model) {
 
   }
 }

@@ -1,9 +1,10 @@
-package com.mz.twitterpuller.tweet;
+package com.mz.twitterpuller.tweet.view;
 
 import android.support.annotation.NonNull;
 import com.mz.twitterpuller.data.model.TweetModel;
+import com.mz.twitterpuller.tweet.TweetAdapterItem;
 
-class TweetItem implements TweetAdapterItem<TweetModel> {
+public class TweetItem implements TweetAdapterItem<TweetModel> {
 
   private final TweetModel model;
   private final int type;

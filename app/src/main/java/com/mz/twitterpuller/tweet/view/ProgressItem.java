@@ -1,4 +1,6 @@
-package com.mz.twitterpuller.tweet;
+package com.mz.twitterpuller.tweet.view;
+
+import com.mz.twitterpuller.tweet.TweetAdapterItem;
 
 public class ProgressItem implements TweetAdapterItem<Void> {
   @Override public int getType() {

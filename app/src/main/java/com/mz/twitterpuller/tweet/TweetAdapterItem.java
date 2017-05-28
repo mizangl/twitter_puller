@@ -1,6 +1,6 @@
 package com.mz.twitterpuller.tweet;
 
-interface TweetAdapterItem<Model> {
+public interface TweetAdapterItem<Model> {
 
   int PROGRESS = -1;
   int TWEET_BASIC = 0;

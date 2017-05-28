@@ -1,4 +1,4 @@
-package com.mz.twitterpuller.tweet;
+package com.mz.twitterpuller.tweet.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

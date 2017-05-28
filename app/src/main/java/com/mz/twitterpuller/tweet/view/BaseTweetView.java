@@ -1,4 +1,4 @@
-package com.mz.twitterpuller.tweet;
+package com.mz.twitterpuller.tweet.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -62,8 +62,8 @@ public abstract class BaseTweetView extends CardView {
     setMeasuredDimension(widthSize, heightSize);
   }
 
-  protected abstract int measureDecorate(int widthMeasureSpec, int widthUsed,
-      int heightMeasureSpec, int heightUsed);
+  protected abstract int measureDecorate(int widthMeasureSpec, int widthUsed, int heightMeasureSpec,
+      int heightUsed);
 
   @Override protected void onLayout(boolean changed, int l, int t, int r, int b) {
     final int paddingStart = getPaddingStart();
