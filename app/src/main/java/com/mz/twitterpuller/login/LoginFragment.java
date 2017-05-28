@@ -100,8 +100,6 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.login_btn_anim_start);
 
     animatorSet.setTarget(loginButton);
-    animatorSet.setInterpolator(new AnticipateInterpolator());
-    animatorSet.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
 
     animatorSet.addListener(new DefaultAnimListener() {
       @Override public void onAnimationEnd(Animator animation) {

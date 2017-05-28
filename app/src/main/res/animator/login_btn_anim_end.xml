@@ -7,28 +7,28 @@
         android:duration="@android:integer/config_mediumAnimTime"
         android:propertyName="scaleX"
         android:interpolator="@android:anim/decelerate_interpolator"
-        android:valueTo="0.2"
+        android:valueTo="0.5"
         android:valueFrom="1"
         android:valueType="floatType"/>
     <objectAnimator
         android:duration="@android:integer/config_mediumAnimTime"
         android:interpolator="@android:anim/decelerate_interpolator"
         android:propertyName="scaleY"
-        android:valueTo="0.2"
+        android:valueTo="0.5"
         android:valueFrom="1"
         android:valueType="floatType"/>
   </set>
 
   <set android:ordering="together">
     <objectAnimator
-        android:duration="@android:integer/config_longAnimTime"
+        android:duration="@android:integer/config_mediumAnimTime"
         android:propertyName="scaleX"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:valueTo="10"
         android:valueFrom="0.2"
         android:valueType="floatType"/>
     <objectAnimator
-        android:duration="@android:integer/config_longAnimTime"
+        android:duration="@android:integer/config_mediumAnimTime"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:propertyName="scaleY"
         android:valueTo="10"
