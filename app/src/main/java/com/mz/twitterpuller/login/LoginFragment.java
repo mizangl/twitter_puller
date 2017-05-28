@@ -1,5 +1,8 @@
 package com.mz.twitterpuller.login;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,9 +11,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.AnticipateInterpolator;
 import android.widget.ImageButton;
 import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.tweet.TweetsActivity;
@@ -65,6 +66,22 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
   @Override public void navigateToMain() {
     Timber.i("Navigate to Main");
+
+    AnimatorSet animatorSet =
+        (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.login_btn_anim_end);
+
+    animatorSet.setTarget(loginButton);
+
+    animatorSet.addListener(new DefaultAnimListener() {
+      @Override public void onAnimationEnd(Animator animation) {
+        closeLogin();
+      }
+    });
+
+    animatorSet.start();
+  }
+
+  private void closeLogin() {
     final Intent intent = new Intent(getActivity(), TweetsActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -78,17 +95,19 @@ public class LoginFragment extends Fragment implements LoginContract.View {
   }
 
   private void showLoginAnim() {
-    Animation loginAnim =
-        AnimationUtils.loadAnimation(getActivity().getApplication(), R.anim.login_btn_anim);
 
-    loginAnim.setInterpolator(new AccelerateInterpolator());
+    AnimatorSet animatorSet =
+        (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.login_btn_anim_start);
 
-    loginAnim.setAnimationListener(new DefaultAnimListener() {
-      @Override public void onAnimationEnd(Animation animation) {
+    animatorSet.setTarget(loginButton);
+    animatorSet.setInterpolator(new AnticipateInterpolator());
+    animatorSet.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+
+    animatorSet.addListener(new DefaultAnimListener() {
+      @Override public void onAnimationEnd(Animator animation) {
         if (presenter != null) presenter.start();
       }
     });
-
-    loginButton.startAnimation(loginAnim);
+    animatorSet.start();
   }
 }

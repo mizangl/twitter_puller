@@ -1,17 +1,21 @@
 package com.mz.twitterpuller.util;
 
-import android.view.animation.Animation;
+import android.animation.Animator;
 
-public class DefaultAnimListener implements Animation.AnimationListener{
-  @Override public void onAnimationStart(Animation animation) {
-
-  }
-
-  @Override public void onAnimationEnd(Animation animation) {
+public class DefaultAnimListener implements Animator.AnimatorListener {
+  @Override public void onAnimationStart(Animator animation) {
 
   }
 
-  @Override public void onAnimationRepeat(Animation animation) {
+  @Override public void onAnimationEnd(Animator animation) {
+
+  }
+
+  @Override public void onAnimationCancel(Animator animation) {
+
+  }
+
+  @Override public void onAnimationRepeat(Animator animation) {
 
   }
 }
