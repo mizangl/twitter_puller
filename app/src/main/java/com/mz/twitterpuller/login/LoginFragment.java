@@ -11,11 +11,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnticipateInterpolator;
 import android.widget.ImageButton;
 import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.tweet.TweetsActivity;
-import com.mz.twitterpuller.util.DefaultAnimListener;
+import com.mz.twitterpuller.util.DefaultAnimatorListener;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import timber.log.Timber;
 
@@ -24,6 +23,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
   private TwitterLoginButton twitterLoginButton;
   private ImageButton loginButton;
   private LoginContract.Presenter presenter;
+  private AnimatorSet startLoginBtnAnim;
 
   public static LoginFragment newInstance() {
     return new LoginFragment();
@@ -46,6 +46,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
     loginButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
+        if(startLoginBtnAnim.isStarted()) startLoginBtnAnim.cancel();
         presenter.login();
       }
     });
@@ -72,7 +73,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
     animatorSet.setTarget(loginButton);
 
-    animatorSet.addListener(new DefaultAnimListener() {
+    animatorSet.addListener(new DefaultAnimatorListener() {
       @Override public void onAnimationEnd(Animator animation) {
         closeLogin();
       }
@@ -96,16 +97,10 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
   private void showLoginAnim() {
 
-    AnimatorSet animatorSet =
+    startLoginBtnAnim =
         (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.login_btn_anim_start);
 
-    animatorSet.setTarget(loginButton);
-
-    animatorSet.addListener(new DefaultAnimListener() {
-      @Override public void onAnimationEnd(Animator animation) {
-        if (presenter != null) presenter.start();
-      }
-    });
-    animatorSet.start();
+    startLoginBtnAnim.setTarget(loginButton);
+    startLoginBtnAnim.start();
   }
 }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.data.model.TweetModel;
 import com.mz.twitterpuller.tweet.TweetsContract.View;
+import com.mz.twitterpuller.tweet.view.TweetItemAnimator;
 import com.mz.twitterpuller.util.EndlessScroll;
 import java.util.List;
 import timber.log.Timber;
@@ -151,6 +152,7 @@ public class TweetsFragment extends Fragment
     recyclerView.setLayoutManager(manager);
     recyclerView.setAdapter(adapter);
     recyclerView.addOnScrollListener(createEndlessScroll(manager));
+    recyclerView.setItemAnimator(new TweetItemAnimator());
     swipeRefreshLayout.setOnRefreshListener(this);
   }
 }
