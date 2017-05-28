@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import com.mz.twitterpuller.R;
 import com.mz.twitterpuller.tweet.TweetsActivity;
+import com.mz.twitterpuller.util.DefaultAnimListener;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import timber.log.Timber;
 
@@ -20,7 +22,6 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
   private TwitterLoginButton twitterLoginButton;
   private ImageButton loginButton;
-  private ProgressBar progressBar;
   private LoginContract.Presenter presenter;
 
   public static LoginFragment newInstance() {
@@ -41,7 +42,6 @@ public class LoginFragment extends Fragment implements LoginContract.View {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     loginButton = (ImageButton) view.findViewById(R.id.login);
     twitterLoginButton = (TwitterLoginButton) view.findViewById(R.id.login_tw);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress);
 
     loginButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -60,7 +60,6 @@ public class LoginFragment extends Fragment implements LoginContract.View {
   }
 
   @Override public void setProgressIndicator(boolean visible) {
-    progressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     loginButton.setVisibility(visible ? View.INVISIBLE : View.VISIBLE);
   }
 
@@ -75,6 +74,21 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
   @Override public void onResume() {
     super.onResume();
-    presenter.start();
+    showLoginAnim();
+  }
+
+  private void showLoginAnim() {
+    Animation loginAnim =
+        AnimationUtils.loadAnimation(getActivity().getApplication(), R.anim.login_btn_anim);
+
+    loginAnim.setInterpolator(new AccelerateInterpolator());
+
+    loginAnim.setAnimationListener(new DefaultAnimListener() {
+      @Override public void onAnimationEnd(Animation animation) {
+        if (presenter != null) presenter.start();
+      }
+    });
+
+    loginButton.startAnimation(loginAnim);
   }
 }
