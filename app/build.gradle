@@ -60,6 +60,7 @@ android {
     textReport true
     textOutput 'stdout'
     ignore 'InvalidPackage'
+    abortOnError false
   }
 }
 
