@@ -1,4 +1,5 @@
-# twitter_puller
+# twitter_puller [![Build Status](https://travis-ci.org/mizangl/twitter_puller.svg?branch=master)](https://travis-ci.org/mizangl/twitter_puller)
+
 Twitter Puller project. Pulls tweets from Twitter API.
 Use Repository Pattern and SQLite FTS4 for searching and filtering
 
